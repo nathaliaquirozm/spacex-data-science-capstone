@@ -1,0 +1,24 @@
+import dash
+from dash import dcc, html
+import plotly.express as px
+import pandas as pd
+
+# Cargar los datos
+df = pd.read_csv("spacex_launch_data_cleaned.csv")
+
+# Inicializar la aplicación Dash
+app = dash.Dash(__name__)
+
+# Crear un gráfico interactivo de éxito de lanzamiento por sitio
+fig = px.bar(df, x='LaunchSite', y='Class', color='Class',
+             title="Éxito de Lanzamiento por Sitio", barmode='group')
+
+# Diseño del Dashboard
+app.layout = html.Div(children=[
+    html.H1("SpaceX Launch Dashboard", style={'textAlign': 'center'}),
+    dcc.Graph(id='launch_success_graph', figure=fig),
+])
+
+# Ejecutar la aplicación
+if __name__ == '__main__':
+    app.run_server(debug=True)
