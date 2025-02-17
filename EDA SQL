@@ -1,0 +1,63 @@
+-- **Task 1: Mostrar los sitios de lanzamiento únicos**
+%%sql
+SELECT DISTINCT Launch_Site FROM SPACEXTABLE;
+
+-- **Task 2: Mostrar 5 registros donde los sitios comiencen con "CCA"**
+%%sql
+SELECT * FROM SPACEXTABLE
+WHERE Launch_Site LIKE 'CCA%'
+LIMIT 5;
+
+-- **Task 3: Total de masa de carga útil de NASA (CRS)**
+%%sql
+SELECT SUM(PAYLOAD_MASS__KG_) AS Total_Payload_Mass
+FROM SPACEXTABLE
+WHERE Customer LIKE '%NASA (CRS)%';
+
+-- **Task 4: Promedio de masa de carga útil de F9 v1.1**
+%%sql
+SELECT AVG(PAYLOAD_MASS__KG_) AS Average_Payload_Mass
+FROM SPACEXTABLE
+WHERE Booster_Version = 'F9 v1.1';
+
+-- **Task 5: Primera fecha con aterrizaje exitoso en tierra**
+%%sql
+SELECT MIN(Date) AS First_Successful_Landing
+FROM SPACEXTABLE
+WHERE Landing_Outcome = 'Success (ground pad)';
+
+-- **Task 6: Boosters con éxito en drone ship y carga útil entre 4000 y 6000 kg**
+%%sql
+SELECT DISTINCT Booster_Version
+FROM SPACEXTABLE
+WHERE Landing_Outcome = 'Success (drone ship)'
+AND PAYLOAD_MASS__KG_ BETWEEN 4000 AND 6000;
+
+-- **Task 7: Total de resultados exitosos y fallidos**
+%%sql
+SELECT Landing_Outcome, COUNT(*) AS Outcome_Count
+FROM SPACEXTABLE
+GROUP BY Landing_Outcome;
+
+-- **Task 8: Boosters con la mayor carga útil**
+%%sql
+SELECT Booster_Version
+FROM SPACEXTABLE
+WHERE PAYLOAD_MASS__KG_ = (
+    SELECT MAX(PAYLOAD_MASS__KG_) FROM SPACEXTABLE
+);
+
+-- **Task 9: Fallos de aterrizaje en drone ship en 2015**
+%%sql
+SELECT DISTINCT SUBSTR(Date, 6, 2) AS Month, Landing_Outcome, Booster_Version, Launch_Site
+FROM SPACEXTABLE
+WHERE Landing_Outcome = 'Failure (drone ship)'
+AND SUBSTR(Date, 1, 4) = '2015';
+
+-- **Task 10: Ranking de los resultados de aterrizaje en un rango de fechas**
+%%sql
+SELECT Landing_Outcome, COUNT(*) AS Outcome_Count
+FROM SPACEXTABLE
+WHERE Date BETWEEN '2010-06-04' AND '2017-03-20'
+GROUP BY Landing_Outcome
+ORDER BY Outcome_Count DESC;
