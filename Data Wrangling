@@ -1,0 +1,31 @@
+import pandas as pd
+
+# Cargar los datos desde el archivo CSV (si ya tienes un DataFrame, usa df directamente)
+df = pd.read_csv("spacex_launch_data.csv")
+
+# **Task 1: Contar el número de lanzamientos por sitio de lanzamiento**
+launch_counts = df['LaunchSite'].value_counts()
+print("Número de lanzamientos por sitio de lanzamiento:")
+print(launch_counts)
+
+# **Task 2: Contar el número de lanzamientos por tipo de órbita**
+orbit_counts = df['Orbit'].value_counts()
+print("\nNúmero de lanzamientos por tipo de órbita:")
+print(orbit_counts)
+
+# **Task 3: Contar los resultados de aterrizaje**
+landing_outcomes = df['Outcome'].value_counts()
+print("\nNúmero de resultados de aterrizaje:")
+print(landing_outcomes)
+
+# **Task 4: Crear una columna 'Class' para identificar aterrizajes exitosos y fallidos**
+bad_outcomes = set(['None None', 'False ASDS', 'False RTLS', 'None ASDS', 'False Ocean'])
+df['Class'] = df['Outcome'].apply(lambda x: 0 if x in bad_outcomes else 1)
+
+# Mostrar las primeras filas con la nueva columna
+print("\nPrimeras filas con la nueva columna 'Class':")
+print(df[['Outcome', 'Class']].head(10))
+
+# **Guardar el DataFrame actualizado en un nuevo archivo CSV**
+df.to_csv("spacex_launch_data_cleaned.csv", index=False)
+print("\nDatos guardados en 'spacex_launch_data_cleaned.csv'")
