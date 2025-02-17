@@ -1,0 +1,43 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+# Cargar datos
+df = pd.read_csv("spacex_launch_data_cleaned.csv")
+
+# Variables
+X = df[['FlightNumber', 'PayloadMass', 'Orbit', 'Booster_Version']]
+y = df['Class']
+
+# Codificación de variables categóricas
+X = pd.get_dummies(X, columns=['Orbit', 'Booster_Version'])
+
+# División de datos
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Entrenar modelo
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Predicciones
+y_pred = model.predict(X_test)
+
+# Evaluación
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Precisión del modelo: {accuracy:.2f}")
+
+# Matriz de confusión
+conf_matrix = confusion_matrix(y_test, y_pred)
+sns.heatmap(conf_matrix, annot=True, cmap="Blues", fmt="d")
+plt.xlabel("Predicho")
+plt.ylabel("Real")
+plt.title("Matriz de Confusión")
+plt.show()
+
+# Reporte de clasificación
+print("Reporte de clasificación:")
+print(classification_report(y_test, y_pred))
