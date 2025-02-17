@@ -1,0 +1,18 @@
+import requests
+import pandas as pd
+
+# URL de la API de SpaceX
+url = "https://api.spacexdata.com/v4/launches/past"
+
+# Obtener datos de la API
+response = requests.get(url)
+data = response.json()
+
+# Convertir los datos en un DataFrame
+df = pd.json_normalize(data)
+
+# Guardar el DataFrame en CSV
+df.to_csv("spacex_launches.csv", index=False)
+
+# Mostrar las primeras filas del DataFrame
+print(df.head())
