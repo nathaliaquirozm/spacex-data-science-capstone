@@ -1,0 +1,21 @@
+import folium
+from geopy.distance import geodesic
+
+# Coordenadas del sitio de lanzamiento
+spacex_lat, spacex_lon = 28.563197, -80.576820
+
+# Crear mapa
+spacex_map = folium.Map(location=[spacex_lat, spacex_lon], zoom_start=10)
+folium.Marker([spacex_lat, spacex_lon], popup="Launch Site", icon=folium.Icon(color="red", icon="rocket")).add_to(spacex_map)
+
+# Mostrar mapa
+spacex_map
+# Calcular distancias
+coast_coords = (28.57205, -80.58528)
+city_coords = (28.3922, -80.6077)
+
+distance_to_coast = geodesic((spacex_lat, spacex_lon), coast_coords).km
+distance_to_city = geodesic((spacex_lat, spacex_lon), city_coords).km
+
+print(f"Distancia al mar: {distance_to_coast:.2f} km")
+print(f"Distancia a la ciudad: {distance_to_city:.2f} km")
