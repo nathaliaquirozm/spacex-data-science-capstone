@@ -1,0 +1,32 @@
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+# URL de la página con la tabla de SpaceX Launches
+static_url = "https://en.wikipedia.org/wiki/List_of_Falcon_9_and_Falcon_Heavy_launches"
+
+# Realizar la solicitud GET
+response = requests.get(static_url)
+response.raise_for_status()  # Asegurar que la solicitud sea exitosa
+
+# Crear un objeto BeautifulSoup
+soup = BeautifulSoup(response.text, 'html.parser')
+
+# Extraer el título de la página
+print("Título de la página:", soup.title.string)
+
+# Encontrar todas las tablas de clase 'wikitable'
+html_tables = soup.find_all('table', class_='wikitable')
+
+# Ver cuántas tablas se encontraron
+print(f"Se encontraron {len(html_tables)} tablas en la página.")
+
+# Convertir la primera tabla en un DataFrame de Pandas
+df = pd.read_html(str(html_tables[0]))[0]
+
+# Mostrar las primeras filas
+print(df.head())
+
+# Guardar el DataFrame en un archivo CSV
+df.to_csv("spacex_launches.csv", index=False)
+print("Datos guardados en 'spacex_launches.csv'")
